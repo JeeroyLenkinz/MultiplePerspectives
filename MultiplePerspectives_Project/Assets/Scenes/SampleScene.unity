@@ -395,7 +395,6 @@ GameObject:
   - component: {fileID: 979247078}
   - component: {fileID: 979247077}
   - component: {fileID: 979247076}
-  - component: {fileID: 979247075}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -403,19 +402,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &979247075
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 979247074}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &979247076
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -486,7 +472,7 @@ GameObject:
   - component: {fileID: 1550022928}
   m_Layer: 0
   m_Name: Player_Temp
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -570,7 +556,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ead19ef5d7dc20c4092e745aa0a1627d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileRb: {fileID: 54819297705826924, guid: d778f5c20d4f776459f95d00120ed9f6,
+    type: 2}
   playerSpeed: 0.05
+  projectileSpeed: 10
+  shootCooldown: 0.5
   trackChangeSpeed: 75
   circleRadius: 10
 --- !u!54 &1550022929

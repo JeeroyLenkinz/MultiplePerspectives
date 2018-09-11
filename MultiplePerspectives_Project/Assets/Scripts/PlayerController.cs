@@ -5,12 +5,17 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     private Rigidbody rb;
-    private bool isRotating;
     private int trackDirection;
     private float totalAmountRotated;
+    private bool isRotating;
+    private bool isShooting;
     private bool canSetZero;
 
+    public Rigidbody projectileRb;
+
     public float playerSpeed;
+    public float projectileSpeed;
+    public float shootCooldown;
     public float trackChangeSpeed;
     public float circleRadius;
 
@@ -18,6 +23,7 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
         rb = GetComponent<Rigidbody>();
         isRotating = false;
+        isShooting = false;
         totalAmountRotated = 0;
 	}
 	
@@ -37,6 +43,12 @@ public class PlayerController : MonoBehaviour {
         if (isRotating)
         {
             TrackChange(trackDirection); //if isRotating has been set to true run the TrackChange function every frame until finished
+        }
+
+        //Check for shooting
+        if (!isShooting && !isRotating)
+        {
+            StartCoroutine("Shoot");
         }
 	}
 
@@ -80,6 +92,22 @@ public class PlayerController : MonoBehaviour {
         {
             totalAmountRotated = 0;
         }
+    }
+
+    IEnumerator Shoot()
+    {
+        if (Input.GetKeyDown("space"))
+        {
+            isShooting = true;
+            Rigidbody clone;
+            clone = Instantiate(projectileRb, transform.position, transform.rotation) as Rigidbody;
+            clone.transform.Rotate(Vector3.forward * 90);
+            clone.velocity = transform.TransformDirection(Vector3.left * projectileSpeed);
+
+            yield return new WaitForSeconds(shootCooldown);
+            isShooting = false;
+        }
+    yield return null;
     }
 
 }

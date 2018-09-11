@@ -24,7 +24,7 @@ public class EnemyController : MonoBehaviour {
         gameController = gameControllerObject.GetComponent<GameController>();
 
         isDead = false;
-        trackNumber = Random.Range(1, 5); //Randomly choose which track to spawn on
+        trackNumber = Random.Range(1, 6); //Randomly choose which track to spawn on (max is exclusive for ints, hence using 6)
 
         switch (trackNumber) //Below comments are based on a top down view of the cylinder (the player starts at the Bottom)
         {
