@@ -13,6 +13,7 @@ public class EnemyController : MonoBehaviour {
     public string enemyType;
     public int enemyHealth;
     public float enemySpeed;
+    public int enemyDamage;
 
     public float cylinderRadius;
     public float cylinderHeight;
@@ -54,11 +55,28 @@ public class EnemyController : MonoBehaviour {
         if (rb.position.y <= 0)
         {
             isDead = true;
+            gameController.DamageBase(enemyDamage);
         }
         if (isDead)
         {
-            gameController.DestroyEnemy(rb.gameObject);
+            gameController.DestroyObject(rb.gameObject);
         }
         rb.position = new Vector3(rb.position.x, rb.position.y - enemySpeed, rb.position.z); //Slowly move the enemy down the cylinder based on the speed
 	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Projectile")
+        {
+            enemyHealth--;
+            if (enemyHealth <= 0)
+            {
+                isDead = true;
+                gameController.KillCountTracker();
+            }
+
+            gameController.DestroyObject(other.gameObject);
+        }
+    }
+
 }

@@ -5,16 +5,21 @@ using UnityEngine;
 public class GameController : MonoBehaviour {
 
     public GameObject enemyType1;
+
     public int totalEnemyTypes;
     public float spawnTimeMin;
     public float spawnTimeMax;
+
+    public int killCount;
+    public int baseHealth;
 
     private bool isSpawning;
     private float spawnTimeWait;
 
 	// Use this for initialization
 	void Start () {
-        
+        killCount = 0;
+        baseHealth = 100;
 	}
 	
 	// Update is called once per frame
@@ -47,8 +52,18 @@ public class GameController : MonoBehaviour {
         yield return null;
     }
 
-    public void DestroyEnemy(GameObject enemy) //Called by EnemyController to destroy their gameObject
+    public void DestroyObject(GameObject objectToDestroy) //Called by EnemyController to destroy their gameObject
     {
-        Destroy(enemy);
+        Destroy(objectToDestroy);
+    }
+
+    public void KillCountTracker()
+    {
+        killCount++;
+    }
+
+    public void DamageBase(int damageAmount)
+    {
+        baseHealth -= damageAmount;
     }
 }

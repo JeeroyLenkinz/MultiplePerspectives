@@ -7,15 +7,19 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody rb;
     private int trackDirection;
     private float totalAmountRotated;
+    private float currentDashMultiplier;
     private bool isRotating;
     private bool isShooting;
+    private bool isDashing;
     private bool canSetZero;
 
     public Rigidbody projectileRb;
 
     public float playerSpeed;
+    public float playerDashMultiplier;
     public float projectileSpeed;
     public float shootCooldown;
+    public float dashCooldown;
     public float trackChangeSpeed;
     public float circleRadius;
 
@@ -24,20 +28,24 @@ public class PlayerController : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         isRotating = false;
         isShooting = false;
+        isDashing = false;
         totalAmountRotated = 0;
+        currentDashMultiplier = 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
         Move();
         //Listen for key press of the track change buttons
-        if ((Input.GetKeyDown("a") || Input.GetAxis("TrackLeft") != 0) && !isRotating)
+        if ((Input.GetKeyDown("a") || Input.GetAxis("LeftTrigger") != 0) && !isRotating)
         {
             isRotating = true;
+            rb.velocity = Vector3.zero;
             trackDirection = 1; //Move left (CW)
         }
-        else if ((Input.GetKeyDown("d") || Input.GetAxis("TrackRight") != 0) && !isRotating) {
+        else if ((Input.GetKeyDown("d") || Input.GetAxis("RightTrigger") != 0) && !isRotating) {
             isRotating = true;
+            rb.velocity = Vector3.zero;
             trackDirection = -1; //Move right (CCW)
         }
         if (isRotating)
@@ -46,9 +54,15 @@ public class PlayerController : MonoBehaviour {
         }
 
         //Check for shooting
-        if (!isShooting && !isRotating)
+        if (!isShooting)
         {
             StartCoroutine("Shoot");
+        }
+
+        //Check for dashing
+        if (!isDashing && !isRotating)
+        {
+            StartCoroutine("Dash");
         }
 	}
 
@@ -57,18 +71,19 @@ public class PlayerController : MonoBehaviour {
         if (!isRotating)
         {
             float moveVertical = Input.GetAxis("Vertical");
-            float movement = moveVertical * playerSpeed;
+            float movement = moveVertical * playerSpeed * currentDashMultiplier;
 
-            rb.position = new Vector3(rb.position.x, rb.position.y + movement, rb.position.z); //X and Z positions untouched, can only move in the Y direction
+            rb.velocity = transform.TransformDirection(Vector3.up * movement);
+            //rb.position = new Vector3(rb.position.x, rb.position.y + movement, rb.position.z); //X and Z positions untouched, can only move in the Y direction
 
             //Clamping the movement of the ship with ceiling and floor
             if (rb.position.y >= 20.0f)
             {
                 rb.position = new Vector3(rb.position.x, 20.0f, rb.position.z);
             }
-            else if (rb.position.y <= 0.0f)
+            else if (rb.position.y <= 0.5f)
             {
-                rb.position = new Vector3(rb.position.x, 0.0f, rb.position.z);
+                rb.position = new Vector3(rb.position.x, 0.5f, rb.position.z);
             }
         }
     }
@@ -94,9 +109,23 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    IEnumerator Dash()
+    {
+        if (Input.GetKeyDown("joystick button 0"))
+        {
+            currentDashMultiplier = playerDashMultiplier;
+            isDashing = true;
+
+            yield return new WaitForSeconds(dashCooldown);
+            currentDashMultiplier = 1;
+            isDashing = false;
+        }
+        yield return null;
+    }
+
     IEnumerator Shoot()
     {
-        if (Input.GetKeyDown("space"))
+        if (Input.GetKeyDown("space") || Input.GetKeyDown("joystick button 2"))
         {
             isShooting = true;
             Rigidbody clone;
