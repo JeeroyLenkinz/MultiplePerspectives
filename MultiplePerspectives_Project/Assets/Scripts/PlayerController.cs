@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour {
 
     IEnumerator Dash()
     {
-        if (Input.GetKeyDown("joystick button 0"))
+        if (Input.GetKeyDown("e") || Input.GetKeyDown("joystick button 0"))
         {
             currentDashMultiplier = playerDashMultiplier;
             isDashing = true;
