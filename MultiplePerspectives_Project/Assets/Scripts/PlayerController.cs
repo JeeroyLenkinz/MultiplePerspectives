@@ -25,12 +25,12 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         Move();
         //Listen for key press of the track change buttons
-        if (Input.GetKeyDown("a") && !isRotating)
+        if ((Input.GetKeyDown("a") || Input.GetAxis("TrackLeft") != 0) && !isRotating)
         {
             isRotating = true;
             trackDirection = 1; //Move left (CW)
         }
-        else if (Input.GetKeyDown("d") && !isRotating) {
+        else if ((Input.GetKeyDown("d") || Input.GetAxis("TrackRight") != 0) && !isRotating) {
             isRotating = true;
             trackDirection = -1; //Move right (CCW)
         }
@@ -48,6 +48,16 @@ public class PlayerController : MonoBehaviour {
             float movement = moveVertical * playerSpeed;
 
             rb.position = new Vector3(rb.position.x, rb.position.y + movement, rb.position.z); //X and Z positions untouched, can only move in the Y direction
+
+            //Clamping the movement of the ship with ceiling and floor
+            if (rb.position.y >= 20.0f)
+            {
+                rb.position = new Vector3(rb.position.x, 20.0f, rb.position.z);
+            }
+            else if (rb.position.y <= 0.0f)
+            {
+                rb.position = new Vector3(rb.position.x, 0.0f, rb.position.z);
+            }
         }
     }
 
