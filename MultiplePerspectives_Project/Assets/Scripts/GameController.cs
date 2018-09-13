@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
-    public GameObject enemyType1;
+    public GameObject[] enemyTypeArray;
+    public float[] enemyProbabilityArray;
 
     public int maxBaseHealth;
-    public int totalEnemyTypes;
     public float spawnTimeMin;
     public float spawnTimeMax;
     public int[] levelRequirements;
@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour {
     private bool isSpawning;
     private float spawnTimeWait;
     private bool waitingToRestart;
+    private int spawnedEnemyType;
 
     [HideInInspector]
     public int killCount;
@@ -62,18 +63,25 @@ public class GameController : MonoBehaviour {
 
     IEnumerator SpawnEnemy()
     {
-        int spawnedEnemyType = Random.Range(1, totalEnemyTypes); //Spawn a random type of enemy from those provided
+        float probability = Random.Range(1.0f, 100.0f);
+        float minRange = 0;
+        float maxRange = 0;
+        
+        for (int j=0; j < enemyTypeArray.Length; j++)
+        {
+            maxRange += enemyProbabilityArray[j];
+
+            if (probability >= minRange && probability < maxRange)
+            {
+                spawnedEnemyType = j;
+            }
+
+            minRange += enemyProbabilityArray[j];
+        }
+
         spawnTimeWait = Random.Range(spawnTimeMin, spawnTimeMax); //Select a random wait time between spawns (between the max and min times)
 
-        switch (spawnedEnemyType) //Switch case to spawn the correct enemy prefab based on the randomly chosen type
-        {
-            case 1:
-                Instantiate(enemyType1);
-                break;
-            default: //Enemy type 1 will be the default enemy type
-                Instantiate(enemyType1);
-                break;
-        }
+        Instantiate(enemyTypeArray[spawnedEnemyType]);
 
         isSpawning = true;
         yield return new WaitForSeconds(spawnTimeWait); //Wait for the given wait time before spawning again

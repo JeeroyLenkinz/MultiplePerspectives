@@ -717,11 +717,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fcb852b128ae2f49ba4d6783a6a1c19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType1: {fileID: 1932780894860080, guid: 11964743ac8970e42ad8f54fc8ea4363, type: 2}
+  enemyTypeArray:
+  - {fileID: 1932780894860080, guid: 11964743ac8970e42ad8f54fc8ea4363, type: 2}
+  - {fileID: 1763945519323706, guid: 07ce31b171bd7854291d5f9b014d09f9, type: 2}
+  - {fileID: 1562883211652766, guid: 2ceeb1b008122cb4e800b000f1aeffb7, type: 2}
+  - {fileID: 1436752704010142, guid: 5002ae69b1d3209419fc2c6bc020d3f8, type: 2}
+  - {fileID: 1869815171070158, guid: e152eda0a4b2c6b43a4c6789f5dada4c, type: 2}
+  enemyProbabilityArray:
+  - 65
+  - 5
+  - 15
+  - 7.5
+  - 7.5
   maxBaseHealth: 100
-  totalEnemyTypes: 1
   spawnTimeMin: 0.55
-  spawnTimeMax: 1.5
+  spawnTimeMax: 1.85
   levelRequirements: 0a0000001e0000003c0000006400000096000000
   restartWaitTime: 3.5
   killCount: 0
@@ -1291,7 +1301,7 @@ MonoBehaviour:
   playerSpeed: 10
   playerDashMultiplier: 3.5
   projectileSpeed: 18
-  shootCooldown: 0.35
+  shootCooldown: 0.3
   dashCooldown: 0.1
   trackChangeSpeed: 95
   circleRadius: 10
