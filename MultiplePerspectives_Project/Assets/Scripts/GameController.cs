@@ -12,11 +12,17 @@ public class GameController : MonoBehaviour {
     public float spawnTimeMin;
     public float spawnTimeMax;
     public int[] levelRequirements;
+    public int[] enemyScoreValues;
     public float restartWaitTime;
+    public float comboResetTime;
+    public int comboBaseRequirement;
+    public float specialEnemySpawnDelay;
 
     private bool isSpawning;
-    private float spawnTimeWait;
     private bool waitingToRestart;
+    private bool comboTimerActive;
+    private bool specialEnemySpawning;
+    private float spawnTimeWait;
     private int spawnedEnemyType;
 
     [HideInInspector]
@@ -31,14 +37,22 @@ public class GameController : MonoBehaviour {
     public int currentLevel;
     [HideInInspector]
     public int levelProgress;
+    [HideInInspector]
+    public int score;
+    [HideInInspector]
+    public int comboMultiplier;
 
     // Use this for initialization
     void Start () {
         killCount = 0;
+        score = 0;
+        comboMultiplier = 1;
         baseHealth = maxBaseHealth;
         gameOver = false;
         youWin = false;
         waitingToRestart = false;
+        comboTimerActive = false;
+        specialEnemySpawning = false;
         currentLevel = 1;
 	}
 	
@@ -58,6 +72,16 @@ public class GameController : MonoBehaviour {
                 youWin = true;
                 StartCoroutine("GameReset");
             }
+            else
+            {
+                specialEnemySpawning = true;
+            }
+        }
+        
+        if (!comboTimerActive)
+        {
+            comboTimerActive = true;
+            StartCoroutine("ComboTimer");
         }
 	}
 
@@ -66,21 +90,29 @@ public class GameController : MonoBehaviour {
         float probability = Random.Range(1.0f, 100.0f);
         float minRange = 0;
         float maxRange = 0;
-        
-        for (int j=0; j < enemyTypeArray.Length; j++)
+
+        if (specialEnemySpawning)
         {
-            maxRange += enemyProbabilityArray[j];
-
-            if (probability >= minRange && probability < maxRange)
-            {
-                spawnedEnemyType = j;
-            }
-
-            minRange += enemyProbabilityArray[j];
+            spawnedEnemyType = 5;
+            spawnTimeWait = specialEnemySpawnDelay;
+            specialEnemySpawning = false;
         }
+        else
+        {
+            for (int j = 0; j < enemyTypeArray.Length; j++)
+            {
+                maxRange += enemyProbabilityArray[j];
 
-        spawnTimeWait = Random.Range(spawnTimeMin, spawnTimeMax); //Select a random wait time between spawns (between the max and min times)
+                if (probability >= minRange && probability < maxRange)
+                {
+                    spawnedEnemyType = j;
+                }
 
+                minRange += enemyProbabilityArray[j];
+            }
+            spawnTimeWait = Random.Range(spawnTimeMin, spawnTimeMax); //Select a random wait time between spawns (between the max and min times)
+        }
+        
         Instantiate(enemyTypeArray[spawnedEnemyType]);
 
         isSpawning = true;
@@ -90,16 +122,34 @@ public class GameController : MonoBehaviour {
         yield return null;
     }
 
+    IEnumerator ComboTimer()
+    {
+        int timerStartScore = score;
+        yield return new WaitForSeconds(comboResetTime);
+
+        if (timerStartScore == score)
+        {
+            comboMultiplier = 1;
+        }
+        if (score - timerStartScore >= comboBaseRequirement*comboMultiplier)
+        {
+            comboMultiplier++;
+        }
+        comboTimerActive = false;
+        yield return null;
+    }
+
     public void DestroyObject(GameObject objectToDestroy) //Called by EnemyController to destroy their gameObject
     {
         Destroy(objectToDestroy);
     }
 
-    public void KillCountTracker()
+    public void KillCountTracker(int enemyType)
     {
         if (!gameOver && !youWin)
         {
             killCount++;
+            score += enemyScoreValues[enemyType] * comboMultiplier;
         }
     }
 
@@ -123,7 +173,7 @@ public class GameController : MonoBehaviour {
         {
             waitingToRestart = true;
             yield return new WaitForSeconds(restartWaitTime);
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene(0);
         }
         yield return null;
     }

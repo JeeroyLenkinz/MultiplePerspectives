@@ -8,13 +8,19 @@ public class EnemyController : MonoBehaviour {
     private GameController gameController;
 
     private bool isDead;
+    private bool isRotating;
     private int trackNumber;
     private int randomRotation;
+    private bool canSetZero;
+    private float totalAmountRotated;
 
     public int enemyType;
     public int enemyHealth;
     public float enemySpeed;
     public int enemyDamage;
+    public bool spawnInCenter;
+    public bool rotateOnHit;
+    public float rotateSpeed;
 
     public float cylinderRadius;
     public float cylinderHeight;
@@ -26,9 +32,11 @@ public class EnemyController : MonoBehaviour {
         gameController = gameControllerObject.GetComponent<GameController>();
 
         isDead = false;
+        isRotating = false;
+        totalAmountRotated = 0.0f;
         trackNumber = Random.Range(1, 6); //Randomly choose which track to spawn on (max is exclusive for ints, hence using 6)
 
-        if (enemyType == 3 || enemyType == 4 || enemyType == 5) //Enemies that must spawn in the center
+        if (spawnInCenter) //Enemies that must spawn in the center
         {
             trackNumber = 5;
         }
@@ -74,17 +82,49 @@ public class EnemyController : MonoBehaviour {
             gameController.DestroyObject(rb.gameObject);
         }
         rb.position = new Vector3(rb.position.x, rb.position.y - enemySpeed, rb.position.z); //Slowly move the enemy down the cylinder based on the speed
+
+        if (isRotating)
+        {
+            RotateEnemy();
+        }
 	}
+
+    private void RotateEnemy()
+    {
+        canSetZero = false;
+        float rotateAmount = Time.deltaTime * rotateSpeed; //Amount to be rotated on each call of Update, takes direction into account
+
+        if (Mathf.Abs((90.0f*randomRotation) - Mathf.Abs(totalAmountRotated)) <= Mathf.Abs(rotateAmount)) //Check if the amount you are about to rotate puts you past 90 degrees of total rotation
+        {
+            rotateAmount = ((90.0f*randomRotation) - Mathf.Abs(totalAmountRotated)); //Set the amount to be rotated to the remainder before reaching 90 degrees
+            isRotating = false;
+            canSetZero = true; //totalAmountRotated needs to be incremented after the RotateAround so we need to know to set it to zero afterwards
+        }
+
+        rb.transform.Rotate(Vector3.up * rotateAmount);
+        totalAmountRotated += rotateAmount; //Update how many degrees we've now rotated in total
+
+        if (canSetZero)
+        {
+            totalAmountRotated = 0;
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Projectile")
         {
             enemyHealth--;
+            if (enemyHealth > 0 && rotateOnHit && !isRotating)
+            {
+                randomRotation = Random.Range(1, 4);
+                isRotating = true;
+            }
+
             if (enemyHealth <= 0)
             {
                 isDead = true;
-                gameController.KillCountTracker();
+                gameController.KillCountTracker(enemyType);
             }
 
             gameController.DestroyObject(other.gameObject);

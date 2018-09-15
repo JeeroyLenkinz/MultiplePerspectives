@@ -13,6 +13,9 @@ public class UpdateCanvas : MonoBehaviour {
     public TextMeshProUGUI killCountText;
     public TextMeshProUGUI announcementText;
     public TextMeshProUGUI levelText;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI multiplierText;
+
     public float announcementTextTime;
 
     // Use this for initialization
@@ -31,6 +34,8 @@ public class UpdateCanvas : MonoBehaviour {
         baseHealthText.text = "Base Health: " + gameController.baseHealth;
         killCountText.text = "Kill Count: " + gameController.killCount;
         levelText.text = "Level " + gameController.currentLevel + ": " + gameController.levelProgress + " Enemies Left";
+        scoreText.text = "Score: " + gameController.score;
+        multiplierText.text = "x" + gameController.comboMultiplier;
 
         if (previousLevel != gameController.currentLevel)
         {

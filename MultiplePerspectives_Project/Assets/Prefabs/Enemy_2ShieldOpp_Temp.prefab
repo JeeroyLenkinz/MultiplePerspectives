@@ -674,10 +674,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f8f1e175a9decf499466f793471c207, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 4
+  enemyType: 3
   enemyHealth: 1
   enemySpeed: 0.025
   enemyDamage: 10
+  spawnInCenter: 1
+  rotateOnHit: 0
+  rotateSpeed: 0
   cylinderRadius: 7.5
   cylinderHeight: 20
 --- !u!114 &114483936623242634
