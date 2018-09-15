@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour {
         isDead = false;
         trackNumber = Random.Range(1, 6); //Randomly choose which track to spawn on (max is exclusive for ints, hence using 6)
 
-        if (enemyType == 2 || enemyType == 4 || enemyType == 5) //Enemies that must spawn in the center
+        if (enemyType == 3 || enemyType == 4 || enemyType == 5) //Enemies that must spawn in the center
         {
             trackNumber = 5;
         }
