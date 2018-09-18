@@ -591,3 +591,4 @@ MonoBehaviour:
   rotateSpeed: 0
   cylinderRadius: 7.5
   cylinderHeight: 20
+  explosionSound: {fileID: 0}

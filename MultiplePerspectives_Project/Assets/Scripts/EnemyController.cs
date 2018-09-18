@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour {
 
     public float cylinderRadius;
     public float cylinderHeight;
+
     
     // Use this for initialization
 	void Start () {
@@ -112,7 +113,7 @@ public class EnemyController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Projectile")
+        if (other.tag == "Projectile" && !isRotating)
         {
             enemyHealth--;
             if (enemyHealth > 0 && rotateOnHit && !isRotating)

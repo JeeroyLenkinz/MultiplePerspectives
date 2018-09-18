@@ -887,7 +887,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 5
   enemyHealth: 3
-  enemySpeed: 0.01
+  enemySpeed: 0.02
   enemyDamage: 20
   spawnInCenter: 1
   rotateOnHit: 1

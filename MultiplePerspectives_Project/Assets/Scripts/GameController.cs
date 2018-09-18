@@ -16,12 +16,16 @@ public class GameController : MonoBehaviour {
     public float restartWaitTime;
     public float comboResetTime;
     public int comboBaseRequirement;
-    public float specialEnemySpawnDelay;
+    public float miniBossSpawnDelay;
+    public float bossSpawnDelay;
+
+    public AudioSource enemyExplosionSound;
 
     private bool isSpawning;
     private bool waitingToRestart;
     private bool comboTimerActive;
-    private bool specialEnemySpawning;
+    private bool miniBossSpawning;
+    private bool bossSpawning;
     private float spawnTimeWait;
     private int spawnedEnemyType;
 
@@ -52,7 +56,8 @@ public class GameController : MonoBehaviour {
         youWin = false;
         waitingToRestart = false;
         comboTimerActive = false;
-        specialEnemySpawning = false;
+        miniBossSpawning = false;
+        bossSpawning = false;
         currentLevel = 1;
 	}
 	
@@ -72,9 +77,13 @@ public class GameController : MonoBehaviour {
                 youWin = true;
                 StartCoroutine("GameReset");
             }
+            else if (currentLevel == levelRequirements.Length)
+            {
+                bossSpawning = true;
+            }
             else
             {
-                specialEnemySpawning = true;
+                miniBossSpawning = true;
             }
         }
         
@@ -91,11 +100,18 @@ public class GameController : MonoBehaviour {
         float minRange = 0;
         float maxRange = 0;
 
-        if (specialEnemySpawning)
+        if (bossSpawning)
+        {
+            spawnedEnemyType = 6;
+            spawnTimeWait = bossSpawnDelay;
+            bossSpawning = false;
+            
+        }
+        else if (miniBossSpawning)
         {
             spawnedEnemyType = 5;
-            spawnTimeWait = specialEnemySpawnDelay;
-            specialEnemySpawning = false;
+            spawnTimeWait = miniBossSpawnDelay;
+            miniBossSpawning = false;
         }
         else
         {
@@ -142,6 +158,10 @@ public class GameController : MonoBehaviour {
     public void DestroyObject(GameObject objectToDestroy) //Called by EnemyController to destroy their gameObject
     {
         Destroy(objectToDestroy);
+        if (objectToDestroy.tag == "Enemy")
+        {
+            enemyExplosionSound.Play();
+        }
     }
 
     public void KillCountTracker(int enemyType)

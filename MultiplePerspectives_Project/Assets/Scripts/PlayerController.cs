@@ -23,8 +23,15 @@ public class PlayerController : MonoBehaviour {
     public float trackChangeSpeed;
     public float circleRadius;
 
-	// Use this for initialization
-	void Start () {
+    public AudioSource shootSound;
+    public AudioSource dashSound;
+    public AudioSource trackChangeSound;
+
+
+
+
+    // Use this for initialization
+    void Start () {
         rb = GetComponent<Rigidbody>();
         isRotating = false;
         isShooting = false;
@@ -42,11 +49,13 @@ public class PlayerController : MonoBehaviour {
             isRotating = true;
             rb.velocity = Vector3.zero;
             trackDirection = 1; //Move left (CW)
+            trackChangeSound.Play();
         }
         else if ((Input.GetKeyDown("d") || Input.GetAxis("RightTrigger") != 0) && !isRotating) {
             isRotating = true;
             rb.velocity = Vector3.zero;
             trackDirection = -1; //Move right (CCW)
+            trackChangeSound.Play();
         }
         if (isRotating)
         {
@@ -74,7 +83,6 @@ public class PlayerController : MonoBehaviour {
             float movement = moveVertical * playerSpeed * currentDashMultiplier;
 
             rb.velocity = transform.TransformDirection(Vector3.up * movement);
-            //rb.position = new Vector3(rb.position.x, rb.position.y + movement, rb.position.z); //X and Z positions untouched, can only move in the Y direction
 
             //Clamping the movement of the ship with ceiling and floor
             if (rb.position.y >= 20.0f)
@@ -98,6 +106,7 @@ public class PlayerController : MonoBehaviour {
             rotateAmount = (90.0f - Mathf.Abs(totalAmountRotated))*direction; //Set the amount to be rotated to the remainder before reaching 90 degrees
             isRotating = false;
             canSetZero = true; //totalAmountRotated needs to be incremented after the RotateAround so we need to know to set it to zero afterwards
+            trackChangeSound.Stop();
         }
 
         rb.transform.RotateAround(Vector3.zero, Vector3.up, rotateAmount); //Rotate around the point 0,0,0 and Y axis by the rotateAmount degrees
@@ -115,6 +124,7 @@ public class PlayerController : MonoBehaviour {
         {
             currentDashMultiplier = playerDashMultiplier;
             isDashing = true;
+            dashSound.Play();
 
             yield return new WaitForSeconds(dashCooldown);
             currentDashMultiplier = 1;
@@ -132,6 +142,7 @@ public class PlayerController : MonoBehaviour {
             clone = Instantiate(projectileRb, transform.position, transform.rotation) as Rigidbody;
             clone.transform.Rotate(Vector3.forward * 90);
             clone.velocity = transform.TransformDirection(Vector3.left * projectileSpeed);
+            shootSound.Play();
 
             yield return new WaitForSeconds(shootCooldown);
             isShooting = false;
