@@ -8,12 +8,15 @@ public class PlayerController : MonoBehaviour {
     private int trackDirection;
     private float totalAmountRotated;
     private float currentDashMultiplier;
+    private float bankRotationAmount;
     private bool isRotating;
     private bool isShooting;
     private bool isDashing;
     private bool canSetZero;
+    private bool bankBackToZero;
 
     public Rigidbody projectileRb;
+    public GameObject shipModel;
 
     public float playerSpeed;
     public float playerDashMultiplier;
@@ -21,6 +24,9 @@ public class PlayerController : MonoBehaviour {
     public float shootCooldown;
     public float dashCooldown;
     public float trackChangeSpeed;
+    public float bankSpeed;
+    public float returnBankSpeed;
+    public float bankAngleFinal;
     public float circleRadius;
 
     public AudioSource shootSound;
@@ -36,7 +42,9 @@ public class PlayerController : MonoBehaviour {
         isRotating = false;
         isShooting = false;
         isDashing = false;
+        bankBackToZero = false;
         totalAmountRotated = 0;
+        bankRotationAmount = 0;
         currentDashMultiplier = 1;
 	}
 	
@@ -50,12 +58,16 @@ public class PlayerController : MonoBehaviour {
             rb.velocity = Vector3.zero;
             trackDirection = 1; //Move left (CW)
             trackChangeSound.Play();
+            bankBackToZero = false;
+            shipModel.transform.localEulerAngles = new Vector3(0.0f, shipModel.transform.localEulerAngles.y, shipModel.transform.localEulerAngles.z);
         }
         else if ((Input.GetKeyDown("d") || Input.GetAxis("RightTrigger") != 0) && !isRotating) {
             isRotating = true;
             rb.velocity = Vector3.zero;
             trackDirection = -1; //Move right (CCW)
             trackChangeSound.Play();
+            bankBackToZero = false;
+            shipModel.transform.localEulerAngles = new Vector3(0.0f, shipModel.transform.localEulerAngles.y, shipModel.transform.localEulerAngles.z);
         }
         if (isRotating)
         {
@@ -73,6 +85,12 @@ public class PlayerController : MonoBehaviour {
         {
             StartCoroutine("Dash");
         }
+
+        if (bankBackToZero)
+        {
+            BankRotation(-trackDirection, 0.0f, returnBankSpeed);
+        }
+
 	}
 
     private void Move()
@@ -89,9 +107,9 @@ public class PlayerController : MonoBehaviour {
             {
                 rb.position = new Vector3(rb.position.x, 20.0f, rb.position.z);
             }
-            else if (rb.position.y <= 0.5f)
+            else if (rb.position.y <= 1.0f)
             {
-                rb.position = new Vector3(rb.position.x, 0.5f, rb.position.z);
+                rb.position = new Vector3(rb.position.x, 1.0f, rb.position.z);
             }
         }
     }
@@ -110,11 +128,13 @@ public class PlayerController : MonoBehaviour {
         }
 
         rb.transform.RotateAround(Vector3.zero, Vector3.up, rotateAmount); //Rotate around the point 0,0,0 and Y axis by the rotateAmount degrees
+        BankRotation(direction, bankAngleFinal, bankSpeed);
         totalAmountRotated += rotateAmount; //Update how many degrees we've now rotated in total
 
         if (canSetZero)
         {
             totalAmountRotated = 0;
+            bankBackToZero = true;
         }
     }
 
@@ -148,6 +168,29 @@ public class PlayerController : MonoBehaviour {
             isShooting = false;
         }
     yield return null;
+    }
+
+    private void BankRotation(int direction, float target, float speed)
+    {
+        bankRotationAmount += Time.deltaTime * speed * -direction;
+        if (!bankBackToZero)
+        {
+            if (Mathf.Abs(bankRotationAmount) >= target)
+            {
+                bankRotationAmount = target * -direction;
+            }
+        }
+        else
+        {
+            if (bankRotationAmount >= target-1.0f && bankRotationAmount <= target+1.0f)
+            {
+                bankRotationAmount = target * -direction;
+                shipModel.transform.localEulerAngles = Vector3.zero;
+                bankRotationAmount = 0;
+                bankBackToZero = false;
+            }
+        }
+        shipModel.transform.localEulerAngles = new Vector3(bankRotationAmount, shipModel.transform.localEulerAngles.y, shipModel.transform.localEulerAngles.z);
     }
 
 }

@@ -13,6 +13,8 @@ public class EnemyController : MonoBehaviour {
     private int randomRotation;
     private bool canSetZero;
     private float totalAmountRotated;
+    private float direction;
+    private int randomDirectionNumber;
 
     public int enemyType;
     public int enemyHealth;
@@ -93,11 +95,11 @@ public class EnemyController : MonoBehaviour {
     private void RotateEnemy()
     {
         canSetZero = false;
-        float rotateAmount = Time.deltaTime * rotateSpeed; //Amount to be rotated on each call of Update, takes direction into account
+        float rotateAmount = Time.deltaTime * rotateSpeed * direction; //Amount to be rotated on each call of Update, takes direction into account
 
         if (Mathf.Abs((90.0f*randomRotation) - Mathf.Abs(totalAmountRotated)) <= Mathf.Abs(rotateAmount)) //Check if the amount you are about to rotate puts you past 90 degrees of total rotation
         {
-            rotateAmount = ((90.0f*randomRotation) - Mathf.Abs(totalAmountRotated)); //Set the amount to be rotated to the remainder before reaching 90 degrees
+            rotateAmount = ((90.0f*randomRotation) - Mathf.Abs(totalAmountRotated))*direction; //Set the amount to be rotated to the remainder before reaching 90 degrees
             isRotating = false;
             canSetZero = true; //totalAmountRotated needs to be incremented after the RotateAround so we need to know to set it to zero afterwards
         }
@@ -119,6 +121,15 @@ public class EnemyController : MonoBehaviour {
             if (enemyHealth > 0 && rotateOnHit && !isRotating)
             {
                 randomRotation = Random.Range(1, 4);
+                randomDirectionNumber = Random.Range(1, 3);
+                if (randomDirectionNumber == 1)
+                {
+                    direction = 1;
+                }
+                else
+                {
+                    direction = -1;
+                }
                 isRotating = true;
             }
 

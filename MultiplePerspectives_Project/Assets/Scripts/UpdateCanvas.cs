@@ -15,6 +15,7 @@ public class UpdateCanvas : MonoBehaviour {
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI multiplierText;
+    public TextMeshProUGUI subAnnouncementText;
 
     public float announcementTextTime;
 
@@ -26,6 +27,7 @@ public class UpdateCanvas : MonoBehaviour {
         isWaiting = false;
         previousLevel = 1;
         announcementText.text = "BEGIN";
+        subAnnouncementText.text = "";
         StartCoroutine("WipeText");
     }
 	
@@ -33,7 +35,14 @@ public class UpdateCanvas : MonoBehaviour {
 	void Update () {
         baseHealthText.text = "Base Health: " + gameController.baseHealth;
         killCountText.text = "Kill Count: " + gameController.killCount;
-        levelText.text = "Level " + gameController.currentLevel + ": " + gameController.levelProgress + " Enemies Left";
+        if (gameController.enemiesToBeDestroyed > 1)
+        {
+            levelText.text = "Wave " + gameController.currentLevel + ": " + gameController.enemiesToBeDestroyed + " Enemies Left";
+        }
+        else
+        {
+            levelText.text = "Wave " + gameController.currentLevel + ": " + gameController.enemiesToBeDestroyed + " Enemy Left";
+        }
         scoreText.text = "Score: " + gameController.score;
         multiplierText.text = "x" + gameController.comboMultiplier;
 
@@ -47,12 +56,25 @@ public class UpdateCanvas : MonoBehaviour {
         if (gameController.gameOver)
         {
             announcementText.text = "GAME OVER";
+            subAnnouncementText.text = scoreText.text;
+            ClearUIText();
         }
         if (gameController.youWin)
         {
             announcementText.text = "YOU WIN";
+            subAnnouncementText.text = scoreText.text;
+            ClearUIText();
         }
 	}
+
+    void ClearUIText() //This is run when the game is over and you want to clear the rest of the HUD, leaving the announcement up
+    {
+        baseHealthText.text = "";
+        killCountText.text = "";
+        levelText.text = "";
+        scoreText.text = "";
+        multiplierText.text = "";
+    }
 
     IEnumerator WipeText()
     {

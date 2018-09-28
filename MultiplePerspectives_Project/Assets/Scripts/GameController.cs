@@ -11,13 +11,12 @@ public class GameController : MonoBehaviour {
     public int maxBaseHealth;
     public float spawnTimeMin;
     public float spawnTimeMax;
-    public int[] levelRequirements;
+    public int[] enemiesPerWave;
+    public bool[] spawnBossAfterLevel;
     public int[] enemyScoreValues;
     public float restartWaitTime;
     public float comboResetTime;
     public int comboBaseRequirement;
-    public float miniBossSpawnDelay;
-    public float bossSpawnDelay;
 
     public AudioSource enemyExplosionSound;
 
@@ -26,8 +25,11 @@ public class GameController : MonoBehaviour {
     private bool comboTimerActive;
     private bool miniBossSpawning;
     private bool bossSpawning;
+    private bool waitingForBossClear;
     private float spawnTimeWait;
     private int spawnedEnemyType;
+    private int enemiesDestroyed;
+    private int enemiesLeftInWave;
 
     [HideInInspector]
     public int killCount;
@@ -45,11 +47,16 @@ public class GameController : MonoBehaviour {
     public int score;
     [HideInInspector]
     public int comboMultiplier;
+    [HideInInspector]
+    public int enemiesToBeDestroyed;
 
     // Use this for initialization
     void Start () {
         killCount = 0;
+        enemiesDestroyed = 0;
+        enemiesToBeDestroyed = enemiesPerWave[0];
         score = 0;
+        enemiesLeftInWave = enemiesPerWave[0];
         comboMultiplier = 1;
         baseHealth = maxBaseHealth;
         gameOver = false;
@@ -58,35 +65,17 @@ public class GameController : MonoBehaviour {
         comboTimerActive = false;
         miniBossSpawning = false;
         bossSpawning = false;
+        waitingForBossClear = false;
         currentLevel = 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        levelProgress = levelRequirements[currentLevel - 1] - killCount;
-        if (!isSpawning) //Check to see if spawning is already underway, if not start spawning an enemy
+        if (!youWin && !gameOver)
         {
-            StartCoroutine("SpawnEnemy");
+            WaveBasedSpawning();
         }
-        if (killCount >= levelRequirements[currentLevel-1])
-        {
-            currentLevel++;
-            if (currentLevel > levelRequirements.Length)
-            {
-                currentLevel = levelRequirements.Length;
-                youWin = true;
-                StartCoroutine("GameReset");
-            }
-            else if (currentLevel == levelRequirements.Length)
-            {
-                bossSpawning = true;
-            }
-            else
-            {
-                miniBossSpawning = true;
-            }
-        }
-        
+
         if (!comboTimerActive)
         {
             comboTimerActive = true;
@@ -94,7 +83,59 @@ public class GameController : MonoBehaviour {
         }
 	}
 
-    IEnumerator SpawnEnemy()
+    void WaveBasedSpawning()
+    {
+        if (!waitingForBossClear)
+        {
+            enemiesToBeDestroyed = enemiesPerWave[currentLevel - 1] - enemiesDestroyed;
+        }
+        else
+        {
+            enemiesToBeDestroyed = 1;
+        }
+
+        if (enemiesToBeDestroyed <= 0 && !waitingForBossClear)
+        {
+            if (spawnBossAfterLevel[currentLevel - 1])
+            {
+                bossSpawning = true;
+                waitingForBossClear = true;
+                enemiesLeftInWave = 1;
+            }
+            else
+            {
+                miniBossSpawning = true;
+                waitingForBossClear = true;
+                enemiesLeftInWave = 1;
+            }
+        }
+        if (!isSpawning && enemiesLeftInWave > 0)
+        {
+            StartCoroutine("SpawnEnemy");
+            enemiesLeftInWave--;
+
+        }
+    }
+
+    void NewWave()
+    {
+        waitingForBossClear = false;
+        enemiesDestroyed = 0;
+        currentLevel++;
+
+        if (currentLevel > enemiesPerWave.Length)
+        {
+            currentLevel = enemiesPerWave.Length;
+            youWin = true;
+            StartCoroutine("GameReset");
+        }
+        else
+        {
+            enemiesLeftInWave = enemiesPerWave[currentLevel - 1];
+        }
+    }
+
+IEnumerator SpawnEnemy()
     {
         float probability = Random.Range(1.0f, 100.0f);
         float minRange = 0;
@@ -103,14 +144,12 @@ public class GameController : MonoBehaviour {
         if (bossSpawning)
         {
             spawnedEnemyType = 6;
-            spawnTimeWait = bossSpawnDelay;
             bossSpawning = false;
             
         }
         else if (miniBossSpawning)
         {
             spawnedEnemyType = 5;
-            spawnTimeWait = miniBossSpawnDelay;
             miniBossSpawning = false;
         }
         else
@@ -126,9 +165,9 @@ public class GameController : MonoBehaviour {
 
                 minRange += enemyProbabilityArray[j];
             }
-            spawnTimeWait = Random.Range(spawnTimeMin, spawnTimeMax); //Select a random wait time between spawns (between the max and min times)
         }
-        
+
+        spawnTimeWait = Random.Range(spawnTimeMin, spawnTimeMax); //Select a random wait time between spawns (between the max and min times)
         Instantiate(enemyTypeArray[spawnedEnemyType]);
 
         isSpawning = true;
@@ -161,6 +200,11 @@ public class GameController : MonoBehaviour {
         if (objectToDestroy.tag == "Enemy")
         {
             enemyExplosionSound.Play();
+            enemiesDestroyed++;
+            if (waitingForBossClear)
+            {
+                NewWave();
+            }
         }
     }
 

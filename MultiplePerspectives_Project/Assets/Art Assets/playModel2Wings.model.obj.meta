@@ -1,0 +1,171 @@
+fileFormatVersion: 2
+guid: 2ceff52d7d0da8b49a135283153f0a0f
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: detail_exhaustVertical_42
+    100002: detail_exhaustVertical_43
+    100004: detail_exhaustVertical_44
+    100006: engine_high_17
+    100008: engine_high_3
+    100010: engine_large_16
+    100012: glass_high_29
+    100014: plane_body_1
+    100016: plane_cockpitModern_0
+    100018: plane_end_7
+    100020: plane_rudder_24
+    100022: //RootNode
+    100024: wing_endHigh_37
+    100026: wing_endHigh_39
+    100028: wing_intake_36
+    100030: wing_intake_38
+    400000: detail_exhaustVertical_42
+    400002: detail_exhaustVertical_43
+    400004: detail_exhaustVertical_44
+    400006: engine_high_17
+    400008: engine_high_3
+    400010: engine_large_16
+    400012: glass_high_29
+    400014: plane_body_1
+    400016: plane_cockpitModern_0
+    400018: plane_end_7
+    400020: plane_rudder_24
+    400022: //RootNode
+    400024: wing_endHigh_37
+    400026: wing_endHigh_39
+    400028: wing_intake_36
+    400030: wing_intake_38
+    2100000: customMaterial9
+    2100002: tire
+    2100004: customMaterial5
+    2100006: black
+    2100008: engine
+    2100010: customMaterial8
+    2300000: detail_exhaustVertical_42
+    2300002: detail_exhaustVertical_43
+    2300004: detail_exhaustVertical_44
+    2300006: engine_high_17
+    2300008: engine_high_3
+    2300010: engine_large_16
+    2300012: glass_high_29
+    2300014: plane_body_1
+    2300016: plane_cockpitModern_0
+    2300018: plane_end_7
+    2300020: plane_rudder_24
+    2300022: wing_endHigh_37
+    2300024: wing_endHigh_39
+    2300026: wing_intake_36
+    2300028: wing_intake_38
+    3300000: detail_exhaustVertical_42
+    3300002: detail_exhaustVertical_43
+    3300004: detail_exhaustVertical_44
+    3300006: engine_high_17
+    3300008: engine_high_3
+    3300010: engine_large_16
+    3300012: glass_high_29
+    3300014: plane_body_1
+    3300016: plane_cockpitModern_0
+    3300018: plane_end_7
+    3300020: plane_rudder_24
+    3300022: wing_endHigh_37
+    3300024: wing_endHigh_39
+    3300026: wing_intake_36
+    3300028: wing_intake_38
+    4300000: detail_exhaustVertical_42
+    4300002: detail_exhaustVertical_43
+    4300004: detail_exhaustVertical_44
+    4300006: engine_high_17
+    4300008: engine_high_3
+    4300010: engine_large_16
+    4300012: glass_high_29
+    4300014: plane_body_1
+    4300016: plane_cockpitModern_0
+    4300018: plane_end_7
+    4300020: plane_rudder_24
+    4300022: wing_endHigh_37
+    4300024: wing_endHigh_39
+    4300026: wing_intake_36
+    4300028: wing_intake_38
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
