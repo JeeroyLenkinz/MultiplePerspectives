@@ -33,7 +33,7 @@ public class UpdateCanvas : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        baseHealthText.text = "Base Health: " + gameController.baseHealth;
+        baseHealthText.text = "City Health: " + gameController.baseHealth;
         killCountText.text = "Kill Count: " + gameController.killCount;
         if (gameController.enemiesToBeDestroyed > 1)
         {
