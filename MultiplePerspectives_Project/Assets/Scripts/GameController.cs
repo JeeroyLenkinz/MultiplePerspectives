@@ -52,6 +52,7 @@ public class GameController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        Cursor.visible = false;
         killCount = 0;
         enemiesDestroyed = 0;
         enemiesToBeDestroyed = enemiesPerWave[0];

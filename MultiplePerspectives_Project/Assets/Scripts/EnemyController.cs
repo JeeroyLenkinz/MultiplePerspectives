@@ -84,7 +84,11 @@ public class EnemyController : MonoBehaviour {
         {
             gameController.DestroyObject(rb.gameObject);
         }
-        rb.position = new Vector3(rb.position.x, rb.position.y - enemySpeed, rb.position.z); //Slowly move the enemy down the cylinder based on the speed
+        //float movement = moveVertical * playerSpeed * currentDashMultiplier;
+
+        //rb.velocity = transform.TransformDirection(Vector3.up * movement);
+        //rb.position = new Vector3(rb.position.x, rb.position.y - enemySpeed, rb.position.z); //Slowly move the enemy down the cylinder based on the speed
+        rb.velocity = transform.TransformDirection(Vector3.down * enemySpeed);
 
         if (isRotating)
         {

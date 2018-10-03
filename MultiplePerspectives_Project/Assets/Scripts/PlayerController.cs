@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
-            if (bankRotationAmount >= target-1.0f && bankRotationAmount <= target+1.0f)
+            if (bankRotationAmount >= target-5.0f && bankRotationAmount <= target+5.0f)
             {
                 bankRotationAmount = target * -direction;
                 shipModel.transform.localEulerAngles = Vector3.zero;
